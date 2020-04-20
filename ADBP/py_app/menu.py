@@ -1,8 +1,9 @@
 """
 MENU FOR THE PYTHON APPLICATION
 
-- fix option 2 so that when there are no more people, it will not return 'q' 
-- make the country names case insensitive so it looks up lower case and upper case
+- fix option 2 so that when there are no more people, it will not return 'q'. Using an if not to get out.
+- make the country names case insensitive so it looks up lower case and upper case. Using str.casefold for caseless matching
+- add the try and exception errors.
 - remove all connection messages - just there for testing
 - don't want to print the memory location
 - password!
@@ -71,7 +72,8 @@ def main():
              # loop through all the countries returned 
             for country in countries:
             # check if the string entered is in the country name, this will pick up partial matches also
-                if country_name in country["Name"]:
+            # using string fold for caseless matching
+                if str.casefold(country_name) in str.casefold(country["Name"]):
                     print(country["Name"],":",country["Continent"],":",country["Population"],":",country["HeadOfState"])
 
             displayMenu()

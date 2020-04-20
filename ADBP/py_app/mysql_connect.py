@@ -2,10 +2,10 @@
 Rough work for functions - all working for now. Just saving work so far
 option 4 - view countries by name should work with lower and uppercase so fix this
 
-password!
+set password before running.
 
 """
-
+passwd = "add password here"
 
 import pymysql
 
@@ -24,7 +24,7 @@ def connect():
     while True:
         # connect to database
         try:
-            conn = pymysql.connect(host="localhost", user="root", password ="root",db="world", cursorclass=pymysql.cursors.DictCursor)
+            conn = pymysql.connect(host="localhost", user="root", password = passwd,db="world", cursorclass=pymysql.cursors.DictCursor)
             print(conn)
             # once connected can break out of this function
             break
@@ -39,7 +39,7 @@ def viewPeople():
     if not conn:
         connect()
 
-    # db= pymysql.connect(host="localhost", user="root", password ="Bunachar21!",db="world", cursorclass=pymysql.cursors.DictCursor)
+    # conn= pymysql.connect(host="localhost", user="root", password =passwd,db="world", cursorclass=pymysql.cursors.DictCursor)
     sql = "select * from person"
 
     with conn:
@@ -51,12 +51,25 @@ def viewPeople():
             while True:
                 result = cursor.fetchmany(2)
                 # not sure if I should have this part in the menu program or not. it is working this way
+                # # trying to stop it printing where no more persons
+                if not result:
+                    print("No more people in the Database.")
+                    break
+                
                 for person in result:
+                    
+                    
                     print(person["personname"],":",person["age"])
+
                 quit = input("quit<q>")
+                # need to stop printing when there are no more people
+                
+                
 
                 if quit == "q":
                     break  
+
+
         except pymysql.IntegrityError as e:
             print(e)
         except pymysql.InternalError as e:
