@@ -242,7 +242,8 @@ from person p
 inner join hasvisitedcity h
 on p.personID = h.personid
 inner join city c
-on h.cityID = c.id
+on h.cityID = c.id 
+order by p.personname, c.name;
 ```
 
 #### Expected results for 4.1.5
@@ -269,23 +270,29 @@ Tom	Tanjung Pinang	Very Long
 
 #### my results for 4.1.5
 
++------------+------------------------+-------------+
 | personname | name                   | Stay Length |
 +------------+------------------------+-------------+
 | Alan       | Arnhem                 | Very Long   |
 | Alan       | Purulia                | Long        |
-| Alan       | Tama                   | Very Long   |
 | Alan       | Suzhou                 | Very Long   |
+| Alan       | Tama                   | Very Long   |
 | Michael    | Guaíba                 | Long        |
-| Michael    | Saint Helier           | Short       |
 | Michael    | Nagoya                 | Very Long   |
-| Sara       | Saint Helier           | Short       |
+| Michael    | Saint Helier           | Short       |
 | Sara       | Jaunpur                | Very Long   |
+| Sara       | Saint Helier           | Short       |
 | Sara       | Zürich                 | Long        |
 | Sean       | Dordrecht              | Very Long   |
 | Sean       | Shangqiu               | Very Long   |
 | Tom        | Dordrecht              | Very Long   |
-| Tom        | Sydney                 | Very Long   |
-| Tom        | São Lourenço da Mata   | Short       |
 | Tom        | Muntinlupa             | Very Long   |
-| Tom        | Tanjung Pinang         | Very Long   |
+| Tom        | São Lourenço da Mata   | Short       |
 | Tom        | Suzhou                 | Long        |
+| Tom        | Sydney                 | Very Long   |
+| Tom        | Tanjung Pinang         | Very Long   |
++------------+------------------------+-------------+
+18 rows in set (0.00 sec)
+
+
+
