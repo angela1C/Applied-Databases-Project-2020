@@ -1,11 +1,11 @@
 """
 
-Module for connecting to mongo db
- - tidy up
- - remove connection messages etc
+Module for connecting to MongoDB to the proj20DB database
+Applied Databases project Q 4.4
+Angela Carpenter
 
 """
-
+# import pymongo module
 import pymongo
 
 # create the connection to MongoDB and store in a variable, myclient
@@ -16,21 +16,17 @@ myclient = None
 # give the global variable a default value of None
 
 
-
+# define the function for connecting to the mongo database
 def connect():
 
     global myclient
-    print("In connect() function")
-    # just to see the connection variable before and after the connection
-    print("1:", myclient)
-
     myclient = pymongo.MongoClient()
-    print("2:", myclient)
     myclient.admin.command('ismaster')
 
+##############################################
+## define function for OPTION 6 Find Students by Address
 
-
-
+# define function that takes an address
 def findStudents(address):
 
     if not myclient:
@@ -39,14 +35,14 @@ def findStudents(address):
     mydb = myclient["proj20DB"]
     # specify the collection in the database
     docs = mydb["docs"]
+    # specify the pipeline
     pipeline = [{"$match": {"details.address":{"$eq":address}}},{"$project":{"details.name":1,"details.age":1,"qualifications":{ "$ifNull":["$qualifications"," "]}}},{"$sort":{"details.name": 1}}]
     students = docs.aggregate(pipeline)
+    # return the results to the function which called this
     return students
-# This returns what I want in Mongo DB itself
-# db.docs.aggregate([{$match: {"details.address":{$eq:"Dublin"}}},{$project:{"details.name":1,_id:0,qualifications:{ $ifNull:["$qualifications","None"]}}},{$sort:{"details.name": 1}}])
-# { "details" : { "name" : "Brian Collins" }, "qualifications" : [ "ENG", "SW" ] }
-# { "details" : { "name" : "Tom Kenna" }, "qualifications" : "None" }
 
+##############################################
+## define function for OPTION 7 Add New Course
 
 def addNewCourse(ID,Name,Level):
 #def addNewCourse():
@@ -57,17 +53,17 @@ def addNewCourse(ID,Name,Level):
     mydb = myclient["proj20DB"]
     # specify the collection in the database
     docs = mydb["docs"]
-
+    # using the users input to update the database
     newDoc = {"_id":ID, "Name":Name, "Level":Level} 
 
-    # catch the insert error here 
+    # catch the insert error here if the user enters an existing _id value
     try:
         docs.insert_one(newDoc)
     except pymongo.errors.DuplicateKeyError as e:
         print("*** ERROR ***: _id ",ID,"already exists")
    
-    
-  
+############   
+## just added a function here when testing if the document was inserted above for option 7. Do not include for project!  
 def findCourse():
 
     if not myclient:
@@ -76,24 +72,18 @@ def findCourse():
     mydb = myclient["proj20DB"]
     # specify the collection in the database
     docs = mydb["docs"]
+    # just want to return all details
     query={}
     courses = docs.find(query)
     return courses
 
 # define the main method here
 def main():
-    print("here")
     if (not myclient):
         try:
             connect()
         except Exception as e:
             print("Error - could not connect.", e)
-
-        
-        find2()
-
-        
-
 
 
 # tell the python program how to start

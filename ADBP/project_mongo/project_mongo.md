@@ -17,7 +17,7 @@ I have the database downloaded into this folder.
 
 - Then enter the following command to import the database:
 mongoimport `--db=proj20DB --collection=docs --file=/Users/ange../desktop/git2020/applieddbdoodle/db_project/mongo.json`
-
+--db=proj20DB --collection=docs --file=/Users/angelacorkery/desktop/git2020/applieddbdoodle/db_project/mongo.json
 
 ***
 
@@ -648,3 +648,5 @@ Initially I was trying to exclude the address and age and include qualifications
 
 
 ```
+
+

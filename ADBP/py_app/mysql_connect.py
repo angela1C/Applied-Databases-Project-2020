@@ -1,11 +1,14 @@
 """
-Rough work for functions - all working for now. Just saving work so far
-option 4 - view countries by name should work with lower and uppercase so fix this
+Module for connecting to MySQL using pymysql module
+ to the World database
 
-set password before running.
+Applied Databases project Q 4.4
+Angela Carpenter
+
+Note: set password before running!
 
 """
-passwd = "add password here"
+passwd = "password"
 
 import pymysql
 
@@ -25,14 +28,14 @@ def connect():
         # connect to database
         try:
             conn = pymysql.connect(host="localhost", user="root", password = passwd,db="world", cursorclass=pymysql.cursors.DictCursor)
-            print(conn)
+            #print(conn)
             # once connected can break out of this function
             break
         except Exception as e:
-            print("problem connecting ", e)
+            print("Sorry - there is a problem connecting to the database...", e)
 
 ##############################################
-## OPTION 1
+## define function for OPTION 1
 
 def viewPeople():
 
@@ -45,35 +48,39 @@ def viewPeople():
     with conn:
         try:
             cursor = conn.cursor()
-            print("Connected to database")
+            #print("Connected to database")
             cursor.execute(sql,)
 
             while True:
+                # this returns the next 2 sets of rows of a query result
                 result = cursor.fetchmany(2)
+                # it will return an empty list if no other rows are available
                 if not result:
-                    print("No more people in the Database.")
+                    #print("There are no more people in the Database.")
                     break
                 for person in result:
                                         
                     print(person["personname"],":",person["age"])
-
+                # takes user input
                 quit = input("quit<q>")
-                
+                # if user presses any other key except 'q' the next two people in the database are shown
                 if quit == "q":
+                    # whenever user presses q, the user is brought back to the main menu
                     break  
 
-
+        # print any exception errors
         except pymysql.IntegrityError as e:
             print(e)
         except pymysql.InternalError as e:
             print(e)      
 
         except Exception as e:
-            print("other error", e)
+            print("Error - please try again", e)
 
 ################################################################
-# OPTION 2
+# define function for OPTION 2
 # 2 View countries by independence year - this is from the country table
+# function takes a year as the input - as entered by user in menu option 2  
 def viewCountriesByIndependenceYear(year):
 
     if not conn:
@@ -89,20 +96,23 @@ def viewCountriesByIndependenceYear(year):
         try:
 
             cursor = conn.cursor()
+            # execute sql query taking the year input by the user
             cursor.execute(sql,year)
+            #fetch all the rows of the query result
             return cursor.fetchall()
-
+        # error exception handling
         except pymysql.IntegrityError as e:
             print(e)
         except pymysql.InternalError as e:
             print(e)      
-
+        
         except Exception as e:
-            print("other error", e)
+            print("Error - please try again.", e)
+        
 
 ################################################################
-# OPTION 3
-
+# define function for OPTION 3
+# function takes a name and age as entered by the user in menu option 3
 def addNewPerson(name, age):
     if not conn:
         connect()
@@ -115,13 +125,18 @@ def addNewPerson(name, age):
 
     with conn:
         try:
+            # create a cursor object with which to execute the sql queries
             cursor = conn.cursor()
+            # execute the sql query using the name and age input by the user
             cursor.execute(sql,(name,age))
             conn.commit()
             print("Insert Successful")
         except pymysql.IntegrityError as e:
+            # if the user has entered a name that already exists, do not add to the database and print error message
             print("*** ERROR ***:",name, " already exists")
-
+        # any other exceptions
+        except Exception as e:
+            print("Error - please try again.", e)
 
 ################################################################
 # option 4 and option 5
