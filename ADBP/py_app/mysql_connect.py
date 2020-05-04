@@ -5,10 +5,12 @@ Module for connecting to MySQL using pymysql module
 Applied Databases project Q 4.4
 Angela Carpenter
 
-Note: set password before running!
+Note: Please note that the password needs to be set password in the passwd field at the top of the script 
+before running the program if your password different to "root".
 
 """
-passwd = "password"
+# please enter password here if different to root
+passwd = "root"
 
 import pymysql
 
@@ -147,10 +149,11 @@ def getCountryData():
 
     global country_data    
 
-    if not country_data:
-        print("Country data has not been fetched yet, Getting country data from database...")
-    else:
-        print("country data previously retrieved - getting from store...")
+    # for testing - remove
+    #if not country_data:
+    #    print("Country data has not been fetched yet, Getting country data from database...")
+    #else:
+    #    print("country data previously retrieved - getting from store...")
 
     if not conn:
             connect()

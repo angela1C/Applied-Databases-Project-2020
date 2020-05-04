@@ -2,6 +2,7 @@
 MENU FOR THE PYTHON APPLICATION 
 Applied Databases project Q 4.4
 Angela Carpenter
+
 """
 
 import mysql_connect
@@ -17,7 +18,11 @@ def main():
         
         choice = input("Choice:")
 
+# write a menu to show the display options
 
+
+
+        
 
 ############## OPTION 1 View People #############
         # if user enters 1
@@ -117,7 +122,7 @@ def main():
                     if int(country["Population"]) > int(pop):
                         print(country["Code"]," : ", country["Name"]," : ", country["Continent"]," : ",country["Population"])
                 elif cmp =="=":
-                    if int(country["Population"]) > int(pop):
+                    if int(country["Population"]) == int(pop):
                         print(country["Code"]," : ", country["Name"]," : ", country["Continent"]," : ",country["Population"])
                 elif cmp =="<":
                     if int(country["Population"]) < int(pop):
@@ -161,14 +166,11 @@ def main():
 
             # call the function AddNewCourse in the mongo_connect module
             added = mongo_connect.addNewCourse(ID,Name,Level)
-
-            # Just checking for now that course has been updated
-            courses = mongo_connect.findCourse()
-            for course in courses:
-                print(course)
-            
             # back to menu
             displayMenu()
+
+
+
 
 ############ END OPTION 7 ###########
 
@@ -183,12 +185,7 @@ def main():
             
             displayMenu()
 
-
-
-
-
         
-# write a menu to show the display options
 def displayMenu():
     print("")
     print("World DB")
@@ -204,11 +201,8 @@ def displayMenu():
     print("6 - Find Students by Address")
     print("7 - Add New Course")
     print("x - Exit application")
-    print("t  - testing a function")
 
 
-
-        
     
 if __name__ == "__main__":
     # only execute if run as a script

@@ -59,23 +59,13 @@ def addNewCourse(ID,Name,Level):
     # catch the insert error here if the user enters an existing _id value
     try:
         docs.insert_one(newDoc)
+        print("Course added to database.")
     except pymongo.errors.DuplicateKeyError as e:
         print("*** ERROR ***: _id ",ID,"already exists")
    
 ############   
-## just added a function here when testing if the document was inserted above for option 7. Do not include for project!  
-def findCourse():
 
-    if not myclient:
-        connect()
-    # specify the database
-    mydb = myclient["proj20DB"]
-    # specify the collection in the database
-    docs = mydb["docs"]
-    # just want to return all details
-    query={}
-    courses = docs.find(query)
-    return courses
+
 
 # define the main method here
 def main():
@@ -88,4 +78,5 @@ def main():
 
 # tell the python program how to start
 if __name__ == "__main__":
-    main()
+    findStudents(address)
+    addNewCourse(ID,Name,Level)
