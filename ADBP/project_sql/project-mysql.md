@@ -1,7 +1,8 @@
-## 4.2. MySQL
-- Import the **world** database from **world.sql** to MySQL and write queries to satisfy the following.
+## 4.2. An overview of the MySQL `World` database used for the project for section 4.2 
 
-(base) A...:~ ang...$ `mysql -u root -p`
+First Import the **world** database from **world.sql** to MySQL and write queries
+
+(base) A...:~ $ `mysql -u root -p`
 Enter password: 
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 
@@ -14,7 +15,7 @@ mysql> use world;
 
 mysql> show tables;
 
-mysql> source /Users/ang.../desktop/git2020/applieddbdoodle/db_project/world.sql
+mysql> source /path-to-database/world.sql
 ```
 
 
