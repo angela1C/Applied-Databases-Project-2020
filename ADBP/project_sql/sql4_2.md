@@ -1,5 +1,8 @@
 
-# 4.1.1 Alan’s travel details
+# An overvie of the MySQL queries for section 4.1, workings and solutions.
+
+
+### 4.1.1 Alan’s travel details
 Give the MySQL command that shows:
 - The name of the cities
 - The Arrival Date in the cities
@@ -7,14 +10,7 @@ Give the MySQL command that shows:
 
 For all cities and countries visited by “Alan” in alphabetical order by city name.
 
-#### Expected results for 4.1.1
-```
-name	dateArrived	name
-Arnhem	2002-04-14	Netherlands
-Purulia	2002-06-20	India
-Suzhou	2002-01-30	China
-Tama	2009-02-13	Japan
-```
+
 
 1. What tables are the data in?
 
@@ -53,6 +49,8 @@ Tama	2009-02-13	Japan
 
 ```sql
  select * from person where personname = "Alan";
+```
+ 
 +----------+------------+------+
 | personID | personname | age  |
 +----------+------------+------+
@@ -69,7 +67,9 @@ from person p
 inner join hasvisitedcity h
 on h.personID = p.personID
 where p.personname ="Alan";
+```
  
+ ```
 +--------+-------------+
 | cityID | dateArrived |
 +--------+-------------+
@@ -96,7 +96,8 @@ inner join city c
 on h.cityID = c.ID
 where p.personname ="Alan"
 ;
-
+```
+```
 +-------------+---------+-------------+
 | dateArrived | Name    | CountryCode |
 +-------------+---------+-------------+
@@ -128,31 +129,8 @@ on c.CountryCode = co.Code
 where p.personname ="Alan"
 order by c.Name
 ;
-
-+---------+-------------+-------------+
-| name    | dateArrived | name        |
-+---------+-------------+-------------+
-| Arnhem  | 2002-04-14  | Netherlands |
-| Purulia | 2002-06-20  | India       |
-| Suzhou  | 2002-01-30  | China       |
-| Tama    | 2009-02-13  | Japan       |
-+---------+-------------+-------------+
-4 rows in set (0.00 sec)
-
 ```
 
-
-
-#### Expected results for 4.1.1
-
-name	dateArrived	name
-Arnhem	2002-04-14	Netherlands
-Purulia	2002-06-20	India
-Suzhou	2002-01-30	China
-Tama	2009-02-13	Japan
-
-
-#### my results:
 ```
 +---------+-------------+-------------+
 | name    | dateArrived | name        |
@@ -183,6 +161,9 @@ Note it is not specifying the average life expectancy for Europe.!
 
 ```sql
 mysql> select avg(lifeExpectancy) as lifeexpectancy from country;
+```
+
+```
 +----------------+
 | lifeexpectancy |
 +----------------+
@@ -195,6 +176,9 @@ Here getting the average life expectancy for Europe only.
 
 ```sql
 select avg(lifeExpectancy) as lifeexpectancy from country where continent = "Europe";
+```
+
+```
 +---------------------+
 | avg(lifeExpectancy) |
 +---------------------+
@@ -212,7 +196,9 @@ Using a sub-query:
 select Name as name, LifeExpectancy as lifeexpectancy from country where continent = "Europe" and LifeExpectancy < (
     select avg(lifeExpectancy) as lifeexpectancy from country
 ) order by Name;
+```
 
+```
 +---------+----------------+
 | name    | lifeexpectancy |
 +---------+----------------+
@@ -231,23 +217,18 @@ Give the SQL command to show the following in ascending personID order:
 - The person’s ID
 - The person’s name
 - The Person’s age
-- A column called Stage that shows the following:
+- A column called Stage
 
-#### Expected results for 4.1.3
-personID	personname	age	Stage
-1	Tom	33	Thirtysomething
-2	Alan	23	Late teens/Twenties
-3	Sean	30	Thirtysomething
-4	Sara	25	Late teens/Twenties
-5	Jane	25	Late teens/Twenties
-6	Michael	19	Late teens/Twenties
+
 
 
 For this question all the details are in the `person` table.
 
-
 ```sql
 select * from person order by personID;
+```
+
+```
 +----------+------------+------+
 | personID | personname | age  |
 +----------+------------+------+
@@ -273,7 +254,9 @@ END as "Stage"
 from person 
 
 order by personID;
+```
 
+```
 +----------+------------+------+---------------------+
 | personID | personname | age  | Stage               |
 +----------+------------+------+---------------------+
@@ -297,38 +280,7 @@ Give the SQL command to show for each country in North America:
 - The percentage of people who speak the official language(s)
 The results should be alphabetical city name order, and within that by country name order, and within that by language order, and within that by ascending percentage.
 
-#### Expected results for 4.1.4
-```
-Ciudad de Guatemala	Guatemala	Spanish	64.7
-Ciudad de MÇxico	Mexico	Spanish	92.1
-Ciudad de Panam†	Panama	Spanish	76.8
-Cockburn Town	Turks and Caicos Islands	English	0.0
-Fort-de-France	Martinique	French	0.0
-George Town	Cayman Islands	English	0.0
-Hamilton	Bermuda	English	100.0
-Kingstown	Saint Vincent and the Grenadines	English	0.0
-La Habana	Cuba	Spanish	100.0
-Managua	Nicaragua	Spanish	97.6
-Nuuk	Greenland	Danish	12.5
-Nuuk	Greenland	Greenlandic	87.5
-Oranjestad	Aruba	Dutch	5.3
-Ottawa	Canada	English	60.4
-Ottawa	Canada	French	23.4
-Plymouth	Montserrat	English	0.0
-Port-au-Prince	Haiti	French	0.0
-Road Town	Virgin Islands, British	English	0.0
-Saint JohnÔs	Antigua and Barbuda	English	0.0
-Saint-Pierre	Saint Pierre and Miquelon	French	0.0
-San JosÇ	Costa Rica	Spanish	97.5
-San Juan	Puerto Rico	Spanish	51.3
-San Salvador	El Salvador	Spanish	100.0
-Santo Domingo de Guzm†n	Dominican Republic	Spanish	98.0
-Tegucigalpa	Honduras	Spanish	97.2
-The Valley	Anguilla	English	0.0
-Washington	United States	English	86.2
-Willemstad	Netherlands Antilles	Dutch	0.0
-Willemstad	Netherlands Antilles	Papiamento	86.2
-```
+
 
 Give the SQL command to show for each country in North America:
 - The name of the capital city
@@ -361,6 +313,10 @@ Working with 3 tables here, the `city` table, the `country` table and the `count
 
 ```sql
  select name, code, capital from country where continent = "North America" order by name;
+```
+ 
+ 
+```
 +----------------------------------+------+---------+
 | name                             | code | capital |
 +----------------------------------+------+---------+
