@@ -1,4 +1,6 @@
-# A summary of my answers only to the questions in  the project.
+## A summary of my answers to the questions in section 4.2 of the project.
+
+A more detailed overview of the questions and queries are in the MongoDB_4.2_details.md file in this same sub-folder.
 
 ### 4.2.1 Average Age of Students
 Give the MongoDB command to find the average age of students.
@@ -9,14 +11,16 @@ This is the answer that is expected:
 My answer uses the following: 
 
 Using the `$project` to get rid of the id 
-```json
+
+```
 db.docs.aggregate([{$group:{_id:null,"Average":{$avg:"$details.age"}}},{ $project: {"_id":0} }])
 ```
 > { "Average" : 33 }
 
 
 Alternatively using `unset`
-```json
+
+```
 db.docs.aggregate([{$group:{_id:null,"Average":{$avg:"$details.age"}}},{ $unset: ["_id"] }])
 ```
 
@@ -58,7 +62,7 @@ The `$group` stage has the following prototype form:
  }
  ```
 
-```json
+```
 db.docs.aggregate([{$group:{_id:null,"Average":{$avg:"$details.age"}}},{ $project: {"_id":0} }])
 db.docs.aggregate([{$group:{_id:null,"Average":{$avg:"$details.age"}}},{ $unset: ["_id"] }])
 ```
@@ -85,7 +89,7 @@ It takes all the input documents and returns one output for each distinct group.
 Give the MongoDB command to show the name of each course and Honours which has the value true if the course level is 8 or higher, otherwise false. The output should be sorted by name.
 
 
-```json
+```
 { "name" : "B.A.", "Honours" : true }
 { "name" : "B.Eng.", "Honours" : false }
 { "name" : "H. Dip. in Data Analytics", "Honours" : true }
@@ -93,7 +97,7 @@ Give the MongoDB command to show the name of each course and Honours which has t
 ```
 
 My answer:
-```json
+```
 db.docs.aggregate([{$match: {level:{$exists:true}}}, {$project:{_id:0, name:1, "Honours":{ $eq:["$level", 8]}}},{$sort:{name:1}}])
 { "name" : "B.A.", "Honours" : true }
 { "name" : "B.Eng.", "Honours" : false }
@@ -110,14 +114,14 @@ Give the MongoDB command to show the number of Qualified Students i.e. those doc
 
 my answer:
 
-```json
+```
  db.docs.aggregate( [ {$match: {qualifications:{$exists:true}}},  { $group: { _id: null, "Qualified Students": {$sum: 1} } }, {$project: {_id:0}}  ])
 { "Qualified Students" : 6 }
 ```
 
 An equivalent way to using the `{ $group: { _id: null, "Qualified Students": {$sum: 1} } }, {$project: {_id:0}} ` part of the query is to use `{$count: "Qualified Students"}`
 
-```json
+```
 db.docs.aggregate([{$match: { qualifications: {$exists: true}}}, {$count: "Qualified Students"}] )
 { "Qualified Students" : 6 }
 ```
@@ -140,7 +144,7 @@ If the student has no qualifications the word “None” should appear:
 
 My answer:
 
-```json
+```
  db.docs.aggregate([{$match: {details:{$exists:true}}},{$project:{"details.name":1,_id:0,qualifications:{ $ifNull:["$qualifications","None"]}}},{$sort:{"details.name": 1}}])
 
  
