@@ -15,6 +15,7 @@ The project had four different sections.
 ## Repository Content
 
 - This README file
+- a folder named "ADBP" containing a subfolder for each of the sections of the project
 - A sub-folder `project_mongo` containing the MongoDb queries together with some comments in a Markdown file
 - A sub-folder `project_sql` containing the MySQL queries and some comments in a Markdown file.
 - A sub-folder `py_app` containing the Python code for the Python application. 
