@@ -1,4 +1,6 @@
-# MongoDB section 4.2 of the project.
+## MongoDB section 4.2 of the project.
+Some notes and code as I worked through the questions and wrote the queries.
+
 
 ### 4.2 Import the file mongo.json to a collection called docs in a database called proj20DB and write queries to satisfy the following.
 
@@ -11,17 +13,17 @@
 $ `mongo` from another terminal (not sure if this is necessary) to start mongo.
 
 I have the database downloaded into this folder.
-*/Users/angela../desktop/git2020/applieddbdoodle/db_project/mongo.json*
+*/Users/../db_project/mongo.json*
 
 - `$cd /usr/local/bin/` to get to folder where the `mongoimport` is.
 
 - Then enter the following command to import the database:
-mongoimport `--db=proj20DB --collection=docs --file=/Users/ange../desktop/git2020/applieddbdoodle/db_project/mongo.json`
---db=proj20DB --collection=docs --file=/Users/angelacorkery/desktop/git2020/applieddbdoodle/db_project/mongo.json
+mongoimport `--db=proj20DB --collection=docs --file=/Users/ange../../db_project/mongo.json`
+--db=proj20DB --collection=docs --file=/Users/angelacorkery/desktop/../db_project/mongo.json
 
 ***
 
-```json
+```
 use proj20DB
 ```
 > switched to db proj20DB
@@ -32,7 +34,7 @@ use proj20DB
 `show collections`
 >docs
 
-```json
+```
 db.docs.find({})
 ```
 
@@ -59,13 +61,13 @@ Give the MongoDB command to find the average age of students.
 >{ "Average" : 33 }
 
 My answer uses the following:
-```json
-
+```
 > db.docs.aggregate([{$group:{_id:null,"Average":{$avg:"$details.age"}}},{ $unset: ["_id"] }])
 ```
 
+```json
 { "Average" : 33 }
-
+```
 
 There are 7 students in this database.
 `db.docs.count()` returns 11 documents. There are 7 documents for each student and 4 documents with details of the courses.
@@ -74,7 +76,8 @@ It looks each student document contains an embedded document with the student de
 
 `db.docs.getIndexes()`
 
->[
+```
+[
 	{
 		"v" : 2,
 		"key" : {
@@ -84,8 +87,9 @@ It looks each student document contains an embedded document with the student de
 		"ns" : "proj20DB.docs"
 	}
 ]
-
+```
 #### A document for a student looks like this
+```
 {
 	"_id" : "G0055555",
 	"details" : {
@@ -97,21 +101,27 @@ It looks each student document contains an embedded document with the student de
 		"ARTS"
 	]
 }
+```
 #### A document for a course looks like this
-{ "_id" : "ARTS", "name" : "B.A.", "level" : 8 }
 
+```json
+{ "_id" : "ARTS", "name" : "B.A.", "level" : 8 }
+```
+
+```
 db.student.find({},{address:1})
 db.docs.find({},{details:1})
 
 db.student.find({address:{$exists:true}},{_id:0,"address.county":1})
 db.docs.find({details:{$exists:true}})
+```
 
-```json
+```
 db.docs.find({details:{$exists:true}}).count()
 ```
 returns 7
 
-```json
+```
 db.docs.find({details:{$exists:true}})
 ```
 
@@ -132,10 +142,13 @@ db.docs.find({details:{$exists:true}})
 ```
 
 Now narrowing down the query to just return the age.
-```json
+```
 db.docs.find({details:{$exists:true}},{_id:0,"details.age":1})
 db.docs.find({"details.age":{$exists:true}},{_id:0,"details.age":1})
+```
 
+
+```json
 { "details" : { "age" : 20 } }
 { "details" : { "age" : 21 } }
 { "details" : { "age" : 21 } }
@@ -146,14 +159,14 @@ db.docs.find({"details.age":{$exists:true}},{_id:0,"details.age":1})
 ```
 
 returning only those over 40 years.
-```json
-db.docs.find({"details.age":{$gt:30}},{_id:0,"details.age":1})
 ```
->{ "details" : { "age" : 53 } }
+db.docs.find({"details.age":{$gt:30}},{_id:0,"details.age":1})
+```json
+{ "details" : { "age" : 53 } }
 { "details" : { "age" : 41 } }
 { "details" : { "age" : 35 } }
 { "details" : { "age" : 40 } }
-
+```
 
 Example.
 
@@ -161,14 +174,16 @@ Example.
 
 The following query returns the average bhp for each model:
 
-```json
+```
 db.docs.aggregate([{$group:{_id:"$model","Avg BHP":{$avg:"$engine.bhp"}}}])
 ```
->{ "_id" : "Fiesta", "Avg BHP" : 88 } { "_id" : "Mondeo", "Avg BHP" : 120 } { "_id" : "Corolla", "Avg BHP" : 118 } { "_id" : "Prius", "Avg BHP" : 90 } { "_id" : "Focus", "Avg BHP" : 118 }
+
+```json
+{ "_id" : "Fiesta", "Avg BHP" : 88 } { "_id" : "Mondeo", "Avg BHP" : 120 } { "_id" : "Corolla", "Avg BHP" : 118 } { "_id" : "Prius", "Avg BHP" : 90 } { "_id" : "Focus", "Avg BHP" : 118 }
+
+```
 
 
-
-(Add these to my notes on Github)
 ### Aggregation Pipeline Quick Reference
 See [Aggregation Pipeline Quick Reference](https://docs.mongodb.com/manual/meta/aggregation-quick-reference/)
 
@@ -184,12 +199,12 @@ In the `db.collection.aggregate` method, pipeline stages appear in an array. Doc
 
 nearly there...
 
-```json
+```
 db.docs.aggregate([{$group:{_id:null,"Average Age":{$avg:"$details.age"}}}])
 ```
 > { "_id" : null, "Average Age" : 33 
 
-```json
+```
 db.docs.aggregate([{$group:{_id:"age","Average Age":{$avg:"$details.age"}}}])
 db.march.aggregate([{$group : {_id:"$age", "Max GPA per Age":{$max:"$gpa"}}},{$sort:{_id:1}}])
 db.docs.aggregate([{$group:{_id:null,"Average Age":{$avg:"$details.age"}}},{ $unset: ["_id"] }])
@@ -201,8 +216,8 @@ This works!
 { "Average" : 33 }
 
 
-Just playing around...
-```json
+
+```
 db.docs.find({"details.age":{$gt:30}},{_id:0,"details.age":1})
 db.docs.find({details:{$exists:true}},{_id:0, "details.age":1})
 ```
@@ -218,11 +233,12 @@ db.docs.aggregate([{$lookup:{from:"docs" ,localField:"author", foreignField:"_id
 ### 4.2.2 Honours Level
 Give the MongoDB command to show the name of each course and Honours which has the value true if the course level is 8 or higher, otherwise false. The output should be sorted by name.
 
->{ "name" : "B.A.", "Honours" : true }
+```json
+{ "name" : "B.A.", "Honours" : true }
 { "name" : "B.Eng.", "Honours" : false }
 { "name" : "H. Dip. in Data Analytics", "Honours" : true }
 { "name" : "H. Dip. in SW Devel", "Honours" : true }
-
+```
 
 #### A document for a student looks like this
 {
@@ -247,10 +263,12 @@ Will be using the `$lookup` aggregation stage here. Actually don't need to as th
 
 First using a find just to see what is returned:
 
-```json
+```
 
 db.docs.find({level:{$exists:true}},{_id:false})
+```
 
+```json
 { "name" : "B.A.", "level" : 8 }
 { "name" : "H. Dip. in SW Devel", "level" : 8 }
 { "name" : "H. Dip. in Data Analytics", "level" : 8 }
@@ -261,9 +279,11 @@ db.docs.find({level:{$exists:true}},{_id:false})
 
 using `$match` and `$exists` pipeline stages to just return documents containing the course levels.
 
-```json
+```
 db.docs.aggregate({$match: {level:{$exists:true}}})
+```
 
+```json
 { "_id" : "ARTS", "name" : "B.A.", "level" : 8 }
 { "_id" : "SW", "name" : "H. Dip. in SW Devel", "level" : 8 }
 { "_id" : "DATA", "name" : "H. Dip. in Data Analytics", "level" : 8 }
@@ -276,9 +296,11 @@ The `_id` should be set to 0 so that it is not returned.
 
 Need to use an aggregation operator on the level which is returned from the pipeline stage. Look at using comparison expression operators to look at the level, check if it level 8 or not which will return `true` if the level is 8, otherwise returns `false`.
 
-```json
+```
 db.docs.aggregate([{$match: {level:{$exists:true}}}, {$project:{_id:0}}])
-  
+``` 
+
+```json
 { "name" : "B.A.", "level" : 8 }
 { "name" : "H. Dip. in SW Devel", "level" : 8 }
 { "name" : "H. Dip. in Data Analytics", "level" : 8 }
@@ -287,8 +309,11 @@ db.docs.aggregate([{$match: {level:{$exists:true}}}, {$project:{_id:0}}])
 
 
 
-```json
+```
 db.docs.aggregate([{$match: {level:{$exists:true}}}, {$project:{_id:0, name:1, "Honours":{ $eq:["$level", 8]}}}])
+```
+
+```json
 { "name" : "B.A.", "Honours" : true }
 { "name" : "H. Dip. in SW Devel", "Honours" : true }
 { "name" : "H. Dip. in Data Analytics", "Honours" : true }
@@ -299,8 +324,12 @@ db.docs.aggregate([{$match: {level:{$exists:true}}}, {$project:{_id:0, name:1, "
 Getting there! need to sort the results by the name of the course.
 
 
-```json
+```
  db.docs.aggregate([{$match: {level:{$exists:true}}}, {$project:{_id:0, name:1, "Honours":{ $eq:["$level", 8]}}},{$sort:{name:-1}}])
+```
+
+
+```json
 { "name" : "B.A.", "Honours" : true }
 { "name" : "B.Eng.", "Honours" : false }
 { "name" : "H. Dip. in Data Analytics", "Honours" : true }
@@ -315,8 +344,11 @@ Give the MongoDB command to show the number of Qualified Students i.e. those doc
 { "Qualified Students" : 6 }
 
 
-```json
+```
  db.docs.find({})
+```
+
+```json
 { "_id" : "ARTS", "name" : "B.A.", "level" : 8 }
 { "_id" : "SW", "name" : "H. Dip. in SW Devel", "level" : 8 }
 { "_id" : "DATA", "name" : "H. Dip. in Data Analytics", "level" : 8 }
@@ -336,10 +368,10 @@ The `qualifications` field is a referenced document. We don't actually need to r
 
 First using a find to see what is returned for all documents containing a qualifications field.
 
-```json
+```
 db.docs.find({qualifications:{$exists:true}})
-
-
+```
+```json
 { "_id" : "G0012345", "details" : { "name" : "John Smith", "address" : "Tuam", "age" : 21 }, "qualifications" : [ "ARTS", "DATA" ] }
 { "_id" : "G0022222", "details" : { "name" : "Mary Murphy", "address" : "Castlebar", "age" : 21 }, "qualifications" : [ "ARTS" ] }
 { "_id" : "G0066666", "details" : { "name" : "Alan Higgins", "address" : "Galway", "age" : 53 }, "qualifications" : [ "ENG, SW" ] }
@@ -349,7 +381,7 @@ db.docs.find({qualifications:{$exists:true}})
 ```
 
 This returns 6 documents.
-```json
+```
 db.docs.find({qualifications:{$exists:true}}).count()
 
 6
@@ -358,9 +390,11 @@ db.docs.find({qualifications:{$exists:true}}).count()
 Here I think a sum or count aggregation operator will be used.
 First need to work on the aggregation pipeline stages to limit what going into the operation.
 
-```json
-
+```
 db.docs.aggregate([{$match: {qualifications:{$exists:true}}}])
+```
+
+```json
 { "_id" : "G0012345", "details" : { "name" : "John Smith", "address" : "Tuam", "age" : 21 }, "qualifications" : [ "ARTS", "DATA" ] }
 { "_id" : "G0022222", "details" : { "name" : "Mary Murphy", "address" : "Castlebar", "age" : 21 }, "qualifications" : [ "ARTS" ] }
 { "_id" : "G0066666", "details" : { "name" : "Alan Higgins", "address" : "Galway", "age" : 53 }, "qualifications" : [ "ENG, SW" ] }
@@ -371,9 +405,12 @@ db.docs.aggregate([{$match: {qualifications:{$exists:true}}}])
 
 We don't want the `details` attributes returned, or the _id so using the `$project` pipeline stage to exclude those fields.
 
-```json
+```
 
 db.docs.aggregate([{$match: {qualifications:{$exists:true}}}, {$project:{_id:0, details:0}}])
+```
+
+```json
 { "qualifications" : [ "ARTS", "DATA" ] }
 { "qualifications" : [ "ARTS" ] }
 { "qualifications" : [ "ENG, SW" ] }
@@ -387,7 +424,7 @@ First using the $match aggregation stage to filter the documents included to onl
 Then using the `$group` aggregation stage to group the results. Using `_id:null` so that the $group stage calculates accumulated values for all the input documents as a whole. The operation performed on the group is the sum of the documents that passed the match aggregation stage.
 Then using the `$project` stage to not return the `_id` attribute.
 
-```json
+```
 db.docs.aggregate( [ 
 	{$match: {qualifications:{$exists:true}}},  
 	{$group: { _id: null, "Qualified Students": {$sum: 1} } }, 
@@ -398,14 +435,14 @@ db.docs.aggregate( [
 Another simpler way is to use the `$count` aggregation stage which according to the documentation is equivalent to the $group and $project sequence I used above!
 
 
-```json
+```
 db.collection.aggregate( [
    { $group: { _id: null, myCount: { $sum: 1 } } },
    { $project: { _id: 0 } }
 ] )
 ```
 
-```json
+```
  db.docs.aggregate( [ {$match: {qualifications:{$exists:true}}},  { $group: { _id: null, "Qualified Students": {$sum: 1} } }, {$project: {_id:0}}  ])
 
 
@@ -416,7 +453,7 @@ db.collection.aggregate( [
 The [$count pipeline stage](https://docs.mongodb.com/manual/reference/operator/aggregation/count/#pipe._S_count) passes a document to the next stage that contains a count of the number of documents input to the stage.
 
 
-```json
+```
  db.docs.aggregate([{$match: { qualifications: {$exists: true}}}, {$count: "Qualified Students"}] )
 
 
@@ -429,7 +466,7 @@ The [$count pipeline stage](https://docs.mongodb.com/manual/reference/operator/a
 Give the MongoDB command to show the name of each Student and his/her qualifications. The output should be in alphabetical name order.
 If the student has no qualifications the word “None” should appear:
 
-
+```json
 { "details" : { "name" : "Alan Higgins" }, "qualifications" : [ "ENG, SW" ] }
 { "details" : { "name" : "Bernie Lynch" }, "qualifications" : [ "ARTS" ] }
 { "details" : { "name" : "Brian Collins" }, "qualifications" : [ "ENG", "SW" ] }
@@ -437,12 +474,15 @@ If the student has no qualifications the word “None” should appear:
 { "details" : { "name" : "Mary Murphy" }, "qualifications" : [ "ARTS" ] }
 { "details" : { "name" : "Mick O'Hara" }, "qualifications" : [ "ENG", "DATA", "SW" ] }
 { "details" : { "name" : "Tom Kenna" }, "qualifications" : "None" 
-
+```
 
 To refresh:
 
-```json
+```
  db.docs.find({})
+```
+
+```json
 { "_id" : "ARTS", "name" : "B.A.", "level" : 8 }
 { "_id" : "SW", "name" : "H. Dip. in SW Devel", "level" : 8 }
 { "_id" : "DATA", "name" : "H. Dip. in Data Analytics", "level" : 8 }
@@ -459,7 +499,7 @@ To refresh:
 The name of each student is inside of a sub-document or embedded document in the  "details" attribute.
 The qualifications of each student use document references to the qualifications documents.
 
-```json
+```
 
  db.docs.aggregate([{$match: { details: {$exists: true}}}] )
 ```
@@ -474,7 +514,7 @@ With the `$lookup` pipeline stage, `from` is the collection in which to perform 
 
 The $lookup stage has the following syntax:
 
-```json
+```
 {
    $lookup:
      {
@@ -493,9 +533,11 @@ The $lookup stage has the following syntax:
 
 
 
-```json
+```
 db.docs.find({details:{$exists:true}},{_id:0,"details.name":1, "qualifications":1}).sort({"details.name":1})
 ```
+
+```json
 { "details" : { "name" : "Alan Higgins" }, "qualifications" : [ "ENG, SW" ] }
 { "details" : { "name" : "Bernie Lynch" }, "qualifications" : [ "ARTS" ] }
 { "details" : { "name" : "Brian Collins" }, "qualifications" : [ "ENG", "SW" ] }
@@ -503,13 +545,13 @@ db.docs.find({details:{$exists:true}},{_id:0,"details.name":1, "qualifications":
 { "details" : { "name" : "Mary Murphy" }, "qualifications" : [ "ARTS" ] }
 { "details" : { "name" : "Mick O'Hara" }, "qualifications" : [ "ENG", "DATA", "SW" ] }
 { "details" : { "name" : "Tom Kenna" } }
-
+```
 Getting close! need to return "None" for Tom who does not have a qualification.
 I think I need to do an aggregation for this?
 
 
 
-```json
+```
 db.docs.aggregate( [
 	{$match: {details:{$exists:true}}},
 	{$lookup:{from:"docs" ,localField:"qualifications", foreignField:"_id",as:"qualifications"}},
@@ -520,13 +562,15 @@ Using the `find(query, projection)` method here with the query being the details
 The projection part is specifying what attributes to return.
 The results are then sorted by the persons name which is in the details embedded document so "details.name"
 
-```json
+```
  db.docs.aggregate( [
 ... {$match: {details:{$exists:true}}},
 ... {$lookup:{from:"docs" ,localField:"qualifications", foreignField:"_id",as:"qualifications"}},
 ... {$project: {_id:0, "details.address":0, "details.age":0}}] )
 
+```
 
+```json
 { "details" : { "name" : "Tom Kenna" }, "qualifications" : [ ] }
 
 { "details" : { "name" : "John Smith" }, "qualifications" : [ { "_id" : "ARTS", "name" : "B.A.", "level" : 8 }, { "_id" : "DATA", "name" : "H. Dip. in Data Analytics", "level" : 8 } ] }
@@ -546,19 +590,19 @@ The results are then sorted by the persons name which is in the details embedded
 
 
 This is what the documents for Alan Higgins and Brian Collins looks like. 
-```
+```json
 { "_id" : "G0066666", "details" : { "name" : "Alan Higgins", "address" : "Galway", "age" : 53 }, "qualifications" : [ "ENG, SW" ] }
 { "_id" : "G0044444", "details" : { "name" : "Brian Collins", "address" : "Dublin", "age" : 35 }, "qualifications" : [ "ENG", "SW" ] }
 
 ```
 Yet when I do an aggregation, Alan's qualification returns an empty array unlike Brian's.??
-```json
+```
 db.docs.aggregate( [
 	{$match: {details:{$exists:true}}},
 	{$lookup:{from:"docs", localField:"qualifications", foreignField:"_id",as:"qualifications"}}] )
 ```
 
-```json
+```
 db.docs.aggregate([{$match: {details:{$exists:true}}}, {$project:{_id:0, "details.address":0, "details.age":0}},{$sort:{"details.name":1}}])
 
  db.docs.aggregate(
@@ -575,9 +619,11 @@ db.docs.aggregate([
 
 
 
+ db.docs.find({})
+```
 
 ```json
- db.docs.find({})
+
 { "_id" : "ARTS", "name" : "B.A.", "level" : 8 }
 { "_id" : "SW", "name" : "H. Dip. in SW Devel", "level" : 8 }
 { "_id" : "DATA", "name" : "H. Dip. in Data Analytics", "level" : 8 }
@@ -591,7 +637,7 @@ db.docs.aggregate([
 { "_id" : "G0055555", "details" : { "name" : "Bernie Lynch", "address" : "Galway", "age" : 40 }, "qualifications" : [ "ARTS" ] }
 ```
 
-```json
+```
 db.docs.aggregate([{$match: {details:{$exists:true}}}, {$sort:{"details.name": 1}},
 {$project:{"details.name":1,"details.address":0, "details.age":0}}
 	])
@@ -604,10 +650,12 @@ I want to return the qualifications field with none if it doesn't exist.
 You cannot include and exlude in the one $project aggregation stage (apart from excluding _id). I want to exclude details.age and details.address but include the qualifications attribute. 
 
 
-```json
+```
 db.docs.aggregate([{$match: {details:{$exists:true}}},
 {$project:{"details.address":0,"details.age":0, _id:0}},{$project:{qualifications:1}},{$sort:{"details.name": 1}}])
+```
 
+```json
 { "details" : { "name" : "Alan Higgins" }, "qualifications" : [ "ENG, SW" ] }
 { "details" : { "name" : "Bernie Lynch" }, "qualifications" : [ "ARTS" ] }
 { "details" : { "name" : "Brian Collins" }, "qualifications" : [ "ENG", "SW" ] }
@@ -622,8 +670,12 @@ db.docs.aggregate([{$match: {details:{$exists:true}}},
 Can use [$ifNull aggregation pipeline operator](https://docs.mongodb.com/manual/reference/operator/aggregation/ifNull/) to return a value for a field if it doesn't exist. Do this inside a $project aggregation pipeline stage.
 
 Initially I was trying to exclude the address and age and include qualifications at the same time using a single $project pipeline stage.
-```json
+```
  db.docs.aggregate([{$match: {details:{$exists:true}}},{$project:{"details.name":1,qualifications:1, _id:0}},{$sort:{"details.name": 1}}])
+```
+
+
+```json
 { "details" : { "name" : "Alan Higgins" }, "qualifications" : [ "ENG, SW" ] }
 { "details" : { "name" : "Bernie Lynch" }, "qualifications" : [ "ARTS" ] }
 { "details" : { "name" : "Brian Collins" }, "qualifications" : [ "ENG", "SW" ] }
@@ -634,9 +686,11 @@ Initially I was trying to exclude the address and age and include qualifications
 ```
 
 
-```json
+```
  db.docs.aggregate([{$match: {details:{$exists:true}}},{$project:{"details.name":1,_id:0,qualifications:{ $ifNull:["$qualifications","None"]}}},{$sort:{"details.name": 1}}])
+```
 
+```json
 
 { "details" : { "name" : "Alan Higgins" }, "qualifications" : [ "ENG, SW" ] }
 { "details" : { "name" : "Bernie Lynch" }, "qualifications" : [ "ARTS" ] }
