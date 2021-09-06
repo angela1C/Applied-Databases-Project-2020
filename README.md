@@ -15,13 +15,15 @@ The project had four different sections.
 ## Repository Content
 
 - This README file
-- A sub-folder containing the MongoDb queries in a Markdown file
-- A sub-folder containing the MySQL queries in a Markdown file.
-- A sub-folder containing the Python code for the Python application. 
+- A sub-folder `project_mongo` containing the MongoDb queries together with some comments in a Markdown file
+- A sub-folder `project_sql` containing the MySQL queries and some comments in a Markdown file.
+- A sub-folder `py_app` containing the Python code for the Python application. 
   1. `menu.py` contains the main menu for the application to interface with both the MySQL database and the MongoDb database.
   2. `mongo_connect.py` a module for connecting to the MongoDb database using the `pymongo` module.
   3. `mysql_connect.py` a module for connecting to the MySQL database using the `pymysql` module.
 
+- The final project specification PDF file
+- A PDF file and a notebook containing the question relating to database design and normalization. 
 ## How to run the code
 
 
